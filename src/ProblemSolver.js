@@ -39,6 +39,9 @@ class ProblemSolver extends React.Component {
   }
 
   solveEquation = () => {
+    // I made a pretty big assumption here that each number and operator the user inputted
+    // into the text input was separted by a space. If this app was going to production,
+    // I would do a much more thorough job sanitizing the input.
     let total     = this.state.input.split(' ');
     let functions = { '*': 'multiply', '/': 'divide' , '+': 'add', '-': 'subtract' }
     let operators = Object.keys(functions);
@@ -50,11 +53,16 @@ class ProblemSolver extends React.Component {
           let a = parseInt(total[i - 1]);
           let b = parseInt(total[i + 1]);
 
-          // determine the appropriate method to be called
+          // determine the appropriate method to call
           let method = functions[operator];
 
+          // call method and get result
           let result = this[method](a, b);
 
+          // this is a little funky: after I retrieve the result, I replace the three
+          // elements in the array that I used to compute the problem (a, the operator, and b)
+          // with two empty strings and the result. This is to ensure the loop's
+          // index stays in the correct place for the next iteration.
           total.splice(i - 1, 3, '', '', result);
         }
       });
