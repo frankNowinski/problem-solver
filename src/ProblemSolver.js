@@ -18,15 +18,18 @@ class ProblemSolver extends React.Component {
       this.setState({ error: '' });
       this.solveEquation();
     } else {
-      this.setState({ error: 'You entered an invalid equation. Please only enter numbers and math operators (+, -, *, /).' });
+      this.setState({
+        error: 'You entered an invalid equation. Please only enter numbers and math operators (+, -, *, /).',
+        total: ''
+      });
     }
   }
 
   validInput = () => {
-    let valid = true;
-    let input = this.state.input;
+    let valid = true, input = this.state.input;
 
     input.split('').forEach(c => {
+      // this could probably be solved more efficiently using Regex
       if (!('0123456789+-*/').includes(c) && c !== ' ') {
         valid = false;
       }
@@ -43,10 +46,13 @@ class ProblemSolver extends React.Component {
     for(let i = 0; i <= total.length; i++) {
       operators.forEach(operator => {
         if (total[i] === operator) {
+          // assign the two values that are going to be computed
           let a = parseInt(total[i - 1]);
           let b = parseInt(total[i + 1]);
 
+          // determine the appropriate method to be called
           let method = functions[operator];
+
           let result = this[method](a, b);
 
           total.splice(i - 1, 3, '', '', result);
